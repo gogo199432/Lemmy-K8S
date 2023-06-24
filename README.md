@@ -18,6 +18,8 @@ This repo serves as a base for a quick setup on a kubernetes cluster. Please not
     - `lemmy-config.secret.yaml`
     - `pict-rs-config.yaml`
     - `pict-rs.secret.yaml`
+- Create the `lemmy` namespace
+- Run `kubectl apply` on this folder
 
 
 
@@ -25,9 +27,9 @@ This repo serves as a base for a quick setup on a kubernetes cluster. Please not
 
 https://join-lemmy.org/docs/en/administration/administration.html
 
-https://raw.githubusercontent.com/LemmyNet/lemmy/release/v0.17/docker/prod/docker-compose.yml
+https://github.com/LemmyNet/lemmy/blob/main/docker/docker-compose.yml
 
-https://raw.githubusercontent.com/LemmyNet/lemmy/release/v0.17/docker/prod/lemmy.hjson
+https://github.com/LemmyNet/lemmy/blob/main/docker/lemmy.hjson
 
 https://git.asonix.dog/asonix/pict-rs/
 
