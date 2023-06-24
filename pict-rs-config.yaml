@@ -1,0 +1,14 @@
+# More config here: https://git.asonix.dog/asonix/pict-rs/src/branch/main/pict-rs.toml
+# Use env variable names in comments
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pictrs-config
+  namespace: lemmy
+data:
+  PICTRS__STORE__TYPE: object_storage
+  PICTRS__STORE__ENDPOINT: YOURMINIOURL
+  PICTRS__STORE__USE_PATH_STYLE: "true"
+  PICTRS__STORE__BUCKET_NAME: "pict-rs"
+  PICTRS__STORE__REGION: minio
+  

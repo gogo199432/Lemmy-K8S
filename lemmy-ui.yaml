@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lemmy-ui
+  namespace: lemmy
+spec:
+  selector:
+    matchLabels:
+      app: lemmy-ui
+  template:
+    metadata:
+      labels:
+        app: lemmy-ui
+    spec:
+      containers:
+      - name: lemmy-ui
+        image: dessalines/lemmy-ui:0.18.0
+        ports:
+        - containerPort: 1234
+        env:
+        - name: LEMMY_UI_LEMMY_INTERNAL_HOST
+          value: "lemmy-service:80"
+        - name: LEMMY_UI_LEMMY_EXTERNAL_HOST
+          value: "example.com"
+        - name: LEMMY_HTTPS
+          value: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lemmy-ui-service
+  namespace: lemmy
+spec:
+  selector:
+    app: lemmy-ui
+  ports:
+  - port: 80
+    targetPort: 1234
+  type: ClusterIP

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lemmy
+  namespace: lemmy
+spec:
+  selector:
+    matchLabels:
+      app: lemmy
+  template:
+    metadata:
+      labels:
+        app: lemmy
+    spec:
+      containers:
+      - name: lemmy
+        image: dessalines/lemmy:0.18.0
+        env:
+        - name: RUST_LOG
+          value: "warn,lemmy_server=info,lemmy_api=info,lemmy_api_common=info,lemmy_api_crud=info,lemmy_apub=info,lemmy_db_schema=info,lemmy_db_views=info,lemmy_db_views_actor=info,lemmy_db_views_moderator=info,lemmy_routes=info,lemmy_utils=info,lemmy_websocket=info"
+        - name: RUST_BACKTRACE
+          value: "full"
+        volumeMounts:
+        - name: config
+          mountPath: "/config"
+      volumes:
+        - name: config
+          secret:
+            secretName: lemmy-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lemmy-service
+  namespace: lemmy
+spec:
+  selector:
+    app: lemmy
+  ports:
+  - port: 80
+    targetPort: 8536
+  type: ClusterIP

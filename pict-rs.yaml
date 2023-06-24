@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pictrs
+  namespace: lemmy
+spec:
+  selector:
+    matchLabels:
+      app: pictrs
+  template:
+    metadata:
+      labels:
+        app: pictrs
+    spec:
+      initContainers:
+      - name: chown
+        image: busybox
+        command: ['sh', '-c', "chown -R 991:991 /mnt"]
+        volumeMounts:
+        - name: root
+          mountPath: "/mnt"
+      containers:
+      - name: pictrs
+        image: asonix/pictrs
+        envFrom:
+        - configMapRef:
+            name: pictrs-config
+        - secretRef:
+            name: pictrs-secret
+        volumeMounts:
+        - name: root
+          mountPath: "/mnt"
+      volumes:
+        - name: root
+          persistentVolumeClaim:
+            claimName: pictrs-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pictrs-pvc
+  namespace: lemmy
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 50Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pictrs-service
+  namespace: lemmy
+spec:
+  selector:
+    app: pictrs
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: ClusterIP
